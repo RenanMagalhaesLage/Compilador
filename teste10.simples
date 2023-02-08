@@ -1,0 +1,12 @@
+programa teste10
+    inteiro a b
+func inteiro maior (inteiro a inteiro b logico c)
+inicio
+    se a > b 
+        entao retorne a 
+        senao retorne b 
+    fimse
+fimfunc
+inicio 
+    escreva maior (10 20)
+fimprograma
