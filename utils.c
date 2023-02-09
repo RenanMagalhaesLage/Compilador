@@ -55,9 +55,6 @@ void insereSimbolo (struct elemTabSimbolos elem){
     tabSimb[posTab++] = elem;
 }
 
-//Sugestão: Desenvolver uma rotina para ajustar o endereço dos parametros na tabela de símbolos e o vetor de 
-//parametros da função depois que for cadastrado o ultimo parametro
-
 void mostraTabela(){
     puts("\nTabela de Simbolos");
     for(int i = 0; i < 60; i++){
@@ -82,6 +79,11 @@ void mostraTabela(){
     printf("\n");
 }
 
+//Sugestão: Desenvolver uma rotina para ajustar o endereço dos parametros na tabela de símbolos e o vetor de 
+//parametros da função depois que for cadastrado o ultimo parametro
+
+/* Função para ajustar o endereço dos parametros  */
+
 void ajusta_parametros(int qnt_Par){
     for(int i = 0; i < posTab ; i++){
         if (tabSimb[i].cat == 'p' ||tabSimb[i].cat == 'f' )
@@ -94,6 +96,8 @@ void ajusta_parametros(int qnt_Par){
         }
     }
 }
+
+/* Função para colocar os parametros dentro do vetor de parametros da função */
 
 void coloca_parametro(int qnt_Par,int tipo, char nome_func[100]){
     for(int i = 0; i < posTab ; i++){

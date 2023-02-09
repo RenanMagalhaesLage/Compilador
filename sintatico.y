@@ -76,6 +76,9 @@ programa
       funcoes
         {
             mostraTabela();
+            //int rot = desempilha();
+            //fprintf(yyout,"L%d\tNADA\n", rot); 
+
         }
       T_INICIO lista_comandos T_FIM
         { 
@@ -133,7 +136,7 @@ lista_variaveis
     ;
 
 
-// Regras para as funções
+    /* REGRAS PARA AS FUNÇÕES */
 funcoes
     : /* vazio */
     | funcao funcoes 
@@ -142,6 +145,8 @@ funcoes
 funcao
     : T_FUNC tipo T_IDENTIF 
       {
+        fprintf(yyout,"\tDSVS\tL%d\n", rotulo);
+        empilha(rotulo);
         contaPar = 0;
         strcpy (elemTab.id, atomo);
         strcpy (atual_func, atomo);
@@ -151,6 +156,8 @@ funcao
         elemTab.rot = ++rotulo;
         insereSimbolo(elemTab);
         fprintf(yyout, "L%d\tENSP\n", rotulo);
+        empilha(rotulo); 
+
         escopo = 'l';
       }
     
@@ -162,6 +169,10 @@ funcao
         }
         //passou pelo fecha colocar os endereços (-5, -4, -3)
       variaveis T_INICIO lista_comandos T_FIMFUNC
+      // similar a declaração em variaveis já feita :
+      /*    empilha(contaVar);
+            if(contaVar)
+                fprintf(yyout,"\tAMEM\t%d\n", contaVar);*/
       //remover variaveis locais e parametros
       {
         //remover_variaveis();
@@ -183,7 +194,8 @@ parametro
         elemTab.esc = escopo;
         contaPar++;
         insereSimbolo(elemTab); 
-        coloca_parametro(contaPar,tipo, atual_func);
+        /* Chamada de função para coloca o parametro dentro do vetor de parametros da função */
+        coloca_parametro(contaPar,tipo, atual_func);  
       }
     ;
 
@@ -203,8 +215,10 @@ comando
 retorno
     :T_RETORNE expressao
         //deve gerar (depois da tradução da expressão)
-        // ARZL(valor de retorno), DMEM (se tiver variavel local)
-        //RTSP n 
+        // comparar se o tipo da função é compatível (retorno é compativel com a declaração??)
+        // ARZL y(valor de retorno),  --> y =  endereço de retorno --> endereço do nome da função na tabela (ex -5)
+        //DMEM x (se tiver variavel local) --> x = quantidade de variáveis
+        //RTSP n --> n = quantidade de parametro
     ;
 
 entrada_saida
@@ -261,10 +275,12 @@ selecao
                 yyerror("Incompatibilidade de tipo!");
             fprintf(yyout,"\tDSVF\tL%d\n", ++rotulo); 
             empilha(rotulo);
+            //printf("rot1 = %d\n ", rotulo);
         }
       lista_comandos T_SENAO
         { 
             int rot = desempilha();
+            //printf("rot2 = %d\n ", rot);
             fprintf(yyout,"\tDSVS\tL%d\n", ++rotulo); 
             fprintf(yyout, "L%d\tNADA\n", rot);
             empilha(rotulo);
@@ -272,6 +288,7 @@ selecao
       lista_comandos T_FIMSE
         { 
             int rot = desempilha();
+            //printf("rot3 = %d\n ", rot);
             fprintf(yyout,"L%d\tNADA\n",rot ); 
         }
     ;
