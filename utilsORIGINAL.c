@@ -112,51 +112,26 @@ void coloca_parametro(int qnt_Par,int tipo, char nome_func[100]){
 // usada para enderecos, variaveis, rotulos
 
 #define TAM_PIL 100
-struct 
-{
-    int valor;
-    char tipo; // r = rotulo , n = numero de variaveis, t = tipo p = posicao
-}pilha[TAM_PIL];
-
-//int pilha[TAM_PIL];
+int pilha[TAM_PIL];
 int topo = -1;
 
-void mostrapilha(){
-    int i = topo;
-    printf("Pilha = [ ");
-    while(i>=0){
-        printf(" (%d,%c) ", pilha[i].valor, pilha[i].tipo);
-        i--;
-    }
-    printf(" ]\n");
-}
-
-void empilha (int valor, char tipo){
+void empilha (int valor){
     if (topo == TAM_PIL)
         yyerror("Pilha semântica cheia");
-    pilha[++topo].valor = valor;
-    pilha[topo].tipo = tipo;
+    pilha[++topo] = valor;
 }
-
-int desempilha(char tipo){
+int desempilha(){
     if(topo == -1)
         yyerror("PIlha semântica vazia!!");
-    if(pilha[topo].tipo != tipo){
-        char msg[100];
-        sprintf(msg, "Desempilha esperado [%c], encontrado [%c]", tipo, pilha[topo].tipo);
-        yyerror(msg);
-    }
-    return pilha[topo--].valor; 
+    return pilha[topo--]; 
 }
 
-
-
 void testaTipo(int tipo1, int tipo2, int ret){
-    int t1 = desempilha('t');
-    int t2 = desempilha('t');
+    int t1 = desempilha();
+    int t2 = desempilha();
     if(t1 != tipo1 || t2 != tipo2) 
         yyerror ("Incompatibilidade de tipo!");
-    empilha(ret,'t');
+    empilha(ret);
 }
 
 
