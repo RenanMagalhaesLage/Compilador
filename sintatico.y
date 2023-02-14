@@ -70,10 +70,11 @@ programa
       variaveis 
         { 
             empilha(contaVar, 'n');
+            contaVar = 0;
             if(contaVar)
                 fprintf(yyout,"\tAMEM\t%d\n", contaVar);
         }
-        //acrescentar funções
+        /*Acrescenta Rotinas/Funções*/
       rotinas
         {
 
@@ -83,7 +84,9 @@ programa
             //fprintf(yyout,"L%d\tNADA\n", rot); 
 
         }
-      T_INICIO lista_comandos T_FIM
+      T_INICIO 
+      lista_comandos 
+      T_FIM
         { 
             int conta = desempilha('n');
             if(conta)
@@ -176,11 +179,23 @@ funcao
       T_ABRE lista_parametros T_FECHA 
         //chamar uma rotina para ajustar os parametros no vetor (negativo, contar o número de parametros)
         {
+            //Tem que empilhar:
+            //num de var locais
+            //endereço de retorno
+            //numero de parametro
+            empilha(contaPar, 'n');
             ajusta_parametros(contaPar);
+            int end = buscaFunc(atual_func);
+            empilha(end, 'p');
 
         }
         //passou pelo fecha colocar os endereços (-5, -4, -3)
-      variaveis T_INICIO lista_comandos T_FIMFUNC
+      variaveis 
+      {
+        empilha(contaVar,'n');
+        contaVar = 0;
+      }
+      T_INICIO lista_comandos T_FIMFUNC
       // similar a declaração em variaveis já feita :
       /*    empilha(contaVar);
             if(contaVar)
@@ -208,7 +223,7 @@ parametro
         //printf("esc = %c",escopo);
         //mostraTabela();
         contaPar++;
-        insereSimbolo(elemTab); 
+        insereSimbolo(elemTab);
         /* Chamada de função para coloca o parametro dentro do vetor de parametros da função */
         coloca_parametro(contaPar,tipo, atual_func);  
       }
@@ -231,6 +246,10 @@ retorno
     :T_RETORNE expressao
     {
         desempilha('t');
+
+        fprintf(yyout,"\tARZL \n"); 
+        fprintf(yyout,"\tDMEM \n"); 
+        fprintf(yyout,"\tRTSP \n"); 
     }
 
         //deve gerar (depois da tradução da expressão)
@@ -297,7 +316,6 @@ selecao
         }
       lista_comandos T_SENAO
         { 
-            mostrapilha();
             int rot = desempilha('r');
             fprintf(yyout,"\tDSVS\tL%d\n", ++rotulo); 
             fprintf(yyout, "L%d\tNADA\n", rot);
@@ -386,7 +404,7 @@ identificador
 // A função é chamada como um termo numa expressão
 chamada 
     : /* Sem parenteses indica que é uma variável */
-    // gerar o código mas tem q testar se é global ou local
+    /* Testar se é global ou local*/
         {
             int pos = desempilha('p');
             //int pos = buscaSimbolo(atomo);
@@ -402,20 +420,28 @@ chamada
         }
     //colocar gerar código de variavel
     | T_ABRE 
-        // gerar AMEM
+        /*Gerar AMEM */
         {
+            int pos = desempilha('p');
+            empilha(tabSimb[pos].tip, 't');
             fprintf(yyout,"\tAMEM\t1\n");
         }
       lista_argumentos 
       T_FECHA
       {
+        /*Gerar SVCP e DSVS */
+        desempilha('t');
+        desempilha('t');
+        buscaSimbolo();
+        empilha(3, 'p');
+        mostrapilha();
         int pos = desempilha('p');
+        mostrapilha();
         fprintf(yyout,"\tSVCP\n"); 
         fprintf(yyout,"\tDSVS\tL%d\n",tabSimb[pos].rot); 
 
       }
-        //SVCP
-        //DSVS
+
     ;
 
 lista_argumentos

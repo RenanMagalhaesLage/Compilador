@@ -83,13 +83,17 @@ void mostraTabela(){
 //parametros da função depois que for cadastrado o ultimo parametro
 
 /* Função para ajustar o endereço dos parametros  */
-
 void ajusta_parametros(int qnt_Par){
     for(int i = 0; i < posTab ; i++){
         if (tabSimb[i].cat == 'p' ||tabSimb[i].cat == 'f' )
         {
             if(tabSimb[i].cat == 'f'){
                 tabSimb[i].qntPar = qnt_Par;
+                /*for(int j=0; j < qnt_Par; j ++){
+                    int tip = desempilha('t');
+                    tabSimb[i].par[qnt_Par-1] = tip;
+                    qnt_Par--;
+                }*/
             }
             tabSimb[i].end = (-3) - (qnt_Par);
             qnt_Par--;
@@ -98,15 +102,24 @@ void ajusta_parametros(int qnt_Par){
 }
 
 /* Função para colocar os parametros dentro do vetor de parametros da função */
-
 void coloca_parametro(int qnt_Par,int tipo, char nome_func[100]){
     for(int i = 0; i < posTab ; i++){
-        if(tabSimb[i].cat == 'f' || strcmp(tabSimb[i].id, nome_func)){
+        if(tabSimb[i].cat == 'f' && !strcmp(tabSimb[i].id, nome_func)){
             tabSimb[i].par[qnt_Par-1] = tipo;
         }
 
     }
 }
+
+int buscaFunc(char nome_func[100]){
+    for(int i=0; i < posTab; i++){
+        if(tabSimb[i].cat == 'f' && !strcmp(tabSimb[i].id, nome_func)){
+            return tabSimb[i].end;
+        }
+    }
+}
+
+
 
 // Estruturada Pilha Semantica
 // usada para enderecos, variaveis, rotulos

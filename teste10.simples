@@ -1,6 +1,6 @@
 programa teste10
     inteiro a b
-func inteiro maior (inteiro a inteiro b logico c)
+func inteiro maior (inteiro a inteiro b)
 inteiro d
 inicio
     se a > b 
