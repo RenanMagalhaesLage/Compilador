@@ -10,7 +10,8 @@ int contaPar;
 int rotulo = 0; // marcar lugares no código 
 int tipo;
 char escopo;
-char atual_func[100];
+char atual_func[100]; //Guarda nome da ultima função declarada
+int posFunc; //Guarda posição na tabela de símbolo
 %}
 
 %token T_PROGRAMA
@@ -92,6 +93,7 @@ programa
             if(conta)
                 fprintf(yyout,"\tDMEM\t%d\n", conta);
             fprintf(yyout, "\tFIMP\n"); 
+            //mostrapilha();
         }
     ;
 
@@ -245,18 +247,24 @@ comando
 retorno
     :T_RETORNE expressao
     {
-        desempilha('t');
+        mostrapilha();
+        int tipo = desempilha('t');
+        //int teste = desempilha('r');
+        //int x  = desempilha('n');
+        //int y = desempilha('p');
+        int y = buscaFunc(atual_func);
+        printf("atomo = %s y = %d\n",atual_func,y);
 
-        fprintf(yyout,"\tARZL \n"); 
-        fprintf(yyout,"\tDMEM \n"); 
-        fprintf(yyout,"\tRTSP \n"); 
+        //ARZL y (valor de retorno)         --> y =  endereço de retorno --> endereço do nome da função na tabela (ex -5)
+        //DMEM x (se tiver variavel local)  --> x = quantidade de variáveis locais
+        //RTSP n                            --> n = quantidade de parametro
+        fprintf(yyout,"\tARZL\t%d\n",y); 
+        fprintf(yyout,"\tDMEM\t%d\n", contaVar); 
+        fprintf(yyout,"\tRTSP\t%d\n",contaPar);
     }
 
         //deve gerar (depois da tradução da expressão)
         // comparar se o tipo da função é compatível (retorno é compativel com a declaração??)
-        // ARZL y(valor de retorno),  --> y =  endereço de retorno --> endereço do nome da função na tabela (ex -5)
-        //DMEM x (se tiver variavel local) --> x = quantidade de variáveis
-        //RTSP n --> n = quantidade de parametro
     ;
 
 entrada_saida
@@ -423,6 +431,7 @@ chamada
         /*Gerar AMEM */
         {
             int pos = desempilha('p');
+            posFunc = pos;
             empilha(tabSimb[pos].tip, 't');
             fprintf(yyout,"\tAMEM\t1\n");
         }
@@ -430,15 +439,11 @@ chamada
       T_FECHA
       {
         /*Gerar SVCP e DSVS */
-        desempilha('t');
-        desempilha('t');
-        buscaSimbolo();
-        empilha(3, 'p');
-        mostrapilha();
-        int pos = desempilha('p');
-        mostrapilha();
+        //empilha(posFunc, 'p');
+        //int pos = desempilha('p');
+        //mostrapilha();
         fprintf(yyout,"\tSVCP\n"); 
-        fprintf(yyout,"\tDSVS\tL%d\n",tabSimb[pos].rot); 
+        fprintf(yyout,"\tDSVS\tL%d\n",tabSimb[posFunc].rot); 
 
       }
 
@@ -446,7 +451,12 @@ chamada
 
 lista_argumentos
     :/* vazio */
-    | expressao  lista_argumentos
+    | expressao  
+    {
+        int tipo = desempilha('t');
+
+    }
+    lista_argumentos
     ;
     
 termo

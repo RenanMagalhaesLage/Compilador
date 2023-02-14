@@ -1,7 +1,7 @@
 programa teste10
     inteiro a b
-func inteiro maior (inteiro a inteiro b)
-inteiro d
+func inteiro maior (inteiro a inteiro b inteiro c)
+inteiro d h k
 inicio
     se a > b 
         entao retorne a 

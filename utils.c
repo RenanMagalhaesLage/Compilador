@@ -121,6 +121,7 @@ int buscaFunc(char nome_func[100]){
 
 
 
+
 // Estruturada Pilha Semantica
 // usada para enderecos, variaveis, rotulos
 
