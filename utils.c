@@ -87,6 +87,7 @@ void mostraTabela(){
 //parametros da função depois que for cadastrado o ultimo parametro
 
 /* Função para ajustar o endereço dos parametros  */
+/* NÃO UTILIZADA*/
 void ajusta_parametros(int qnt_Par){
     for(int i = 0; i < posTab ; i++){
         if (tabSimb[i].cat == 'p' ||tabSimb[i].cat == 'f' )
@@ -125,13 +126,11 @@ int buscaFunc(char *nome_func){
 }
 
 
+/*=============================================================
+                Estruturada Pilha Semantica
+        usada para enderecos, variaveis, rotulos
 
-
-
-
-
-// Estruturada Pilha Semantica
-// usada para enderecos, variaveis, rotulos
+===============================================================*/
 
 #define TAM_PIL 100
 struct 
@@ -272,15 +271,15 @@ void remover_tabela(){
             cont++;
         }
     }
-    //printf("cont = %d\n",cont);
     posTab = posTab - cont;
-    //printf("posTab = %d\n",posTab);
 }
 
+/* Função para retornar o primeiro elemento colocado na pilha - Esse elemento é o número de variáveis GLOBAIS do programa*/
 int finalPilha(){
     return pilha[0].valor;
 }
 
+/* Função para desempilhar tipo na pilha - útil na parte de retorno*/
 void verifica_topo(){
     if(pilha[topo].tipo == 't'){
         desempilha('t');
