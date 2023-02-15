@@ -137,7 +137,7 @@ int buscaFunc(char *nome_func){
 struct 
 {
     int valor;
-    char tipo; // r = rotulo , n = numero de variaveis, t = tipo p = posicao
+    char tipo;  // r = rotulo , n = numero de variaveis, t = tipo p = posicao
 }pilha[TAM_PIL];
 
 //int pilha[TAM_PIL];
@@ -165,6 +165,7 @@ int desempilha(char tipo){
         yyerror("Pilha semântica vazia!!");
     if(pilha[topo].tipo != tipo){
         char msg[100];
+        mostrapilha();
         sprintf(msg, "Desempilha esperado [%c], encontrado [%c]", tipo, pilha[topo].tipo);
         yyerror(msg);
     }
@@ -261,6 +262,25 @@ void ajusta_parametros2(char *nome_func){
     
 }
 
+/* Função para remover elementos locais da tabela */
+/* Apenas diminui a posição da tabela para que assim possa ser sobreescrita*/
+void remover_tabela(){
+    //printf("posTab = %d\n",posTab);
+    int cont = 0;
+    int posicao = posTab;
+    for(int i = 0; i < posTab ; i++){
+        if(tabSimb[i].esc != 'g'){
+            cont++;
+        }
+    }
+    //printf("cont = %d\n",cont);
+    posTab = posTab - cont;
+    //printf("posTab = %d\n",posTab);
+}
+
+int finalPilha(){
+    return pilha[0].valor;
+}
 
 /*
 void testaAritmetico(){

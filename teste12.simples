@@ -1,9 +1,9 @@
-programa teste 12
+programa teste12
 inteiro x y
-funcinteiro maior ( inteiro a inteiro b )
+func inteiro maior ( inteiro a inteiro b )
     logico c
 inicio
-    c <= a > b
+    c <- a > b
     se c
         entao retorne a
         senao retorne b

@@ -73,9 +73,9 @@ programa
       variaveis 
         { 
             empilha(contaVar, 'n');
-            contaVar = 0;
             if(contaVar)
                 fprintf(yyout,"\tAMEM\t%d\n", contaVar);
+            contaVar = 0;
         }
         /*Acrescenta Rotinas/Funções*/
       rotinas
@@ -91,7 +91,8 @@ programa
       lista_comandos 
       T_FIM
         { 
-            int conta = desempilha('n');
+            int conta = finalPilha();
+            //int conta = desempilha('n');
             if(conta)
                 fprintf(yyout,"\tDMEM\t%d\n", conta);
             fprintf(yyout, "\tFIMP\n"); 
@@ -189,7 +190,6 @@ funcao
             //numero de parametro
             empilha(contaPar, 'n');
             //ajusta_parametros(contaPar);
-            mostrapilha();
             ajusta_parametros2(atual_func);
             //printf("par = %d func = %s\n",contaPar,atual_func);
             int end = buscaFunc(atual_func);
@@ -200,6 +200,9 @@ funcao
       variaveis 
       {
         empilha(contaVar,'n');
+        //printf("contarVar = %d", contaVar);
+        if(contaVar)
+            fprintf(yyout,"\tAMEM\t%d\n", contaVar);
         contaVar = 0;
       }
       T_INICIO lista_comandos T_FIMFUNC
@@ -209,7 +212,8 @@ funcao
                 fprintf(yyout,"\tAMEM\t%d\n", contaVar);*/
       //remover variaveis locais e parametros
       {
-        //remover_variaveis();
+        mostraTabela();
+        remover_tabela();
         escopo = 'g';
       }
     ;
@@ -228,7 +232,6 @@ parametro
         //AQUI ESTÁ COM PROBLEMA
         elemTab.esc = escopo;
         //printf("esc = %c",escopo);
-        //mostraTabela();
         contaPar++;
         insereSimbolo(elemTab);
         /* Chamada de função para coloca o parametro dentro do vetor de parametros da função */
@@ -252,7 +255,6 @@ comando
 retorno
     :T_RETORNE expressao
     {
-        //mostrapilha();
         int tipo = desempilha('t');
         //int teste = desempilha('r');
         //int x  = desempilha('n');
@@ -460,7 +462,6 @@ chamada
         /*Chama a função para verificar se houve algum ERRO*/
         comparaSeERRO(chama_func, y, x);
         empilha(x,'t');
-        //mostrapilha();
       }
 
     ;
