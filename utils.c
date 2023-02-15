@@ -55,6 +55,7 @@ void insereSimbolo (struct elemTabSimbolos elem){
     tabSimb[posTab++] = elem;
 }
 
+/* Função para Mostrar a tabela */
 void mostraTabela(){
     puts("\nTabela de Simbolos");
     for(int i = 0; i < 60; i++){

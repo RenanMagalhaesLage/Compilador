@@ -81,7 +81,7 @@ programa
       rotinas
         {
 
-            //printf("id = %s esc = %c", tabSimb[4].id,tabSimb[4].esc);
+            /* Mostra a Tabela FINAL SEM as variáveis Locais */
             mostraTabela();
             //int rot = desempilha();
             //fprintf(yyout,"L%d\tNADA\n", rot); 
@@ -211,6 +211,7 @@ funcao
                 fprintf(yyout,"\tAMEM\t%d\n", contaVar);*/
       //remover variaveis locais e parametros
       {
+        /* Mostra a Tabela COM as variáveis Locais */
         mostraTabela();
         remover_tabela();
         escopo = 'g';
