@@ -5,13 +5,15 @@
 
 #include "lexico.c"
 #include "utils.c"
-int contaVar;    // conta o número de variáveis
+int contaVar=0;    // conta o número de variáveis
 int contaPar;
 int rotulo = 0; // marcar lugares no código 
 int tipo;
 char escopo;
-char atual_func[100]; //Guarda nome da ultima função declarada
-int posFunc; //Guarda posição na tabela de símbolo
+char atual_func[100];   //Guarda nome da ultima função declarada
+int posFunc;            //Guarda posição na tabela de símbolo
+char chama_func[100];   //Guarda o nome da chamada da função
+//int numChamadaPar = 0;      //Guarda a quantidade de parametros que foi usada na chamada --> serve para verificar se está correto
 %}
 
 %token T_PROGRAMA
@@ -93,7 +95,7 @@ programa
             if(conta)
                 fprintf(yyout,"\tDMEM\t%d\n", conta);
             fprintf(yyout, "\tFIMP\n"); 
-            //mostrapilha();
+            mostrapilha();
         }
     ;
 
@@ -186,7 +188,10 @@ funcao
             //endereço de retorno
             //numero de parametro
             empilha(contaPar, 'n');
-            ajusta_parametros(contaPar);
+            //ajusta_parametros(contaPar);
+            mostrapilha();
+            ajusta_parametros2(atual_func);
+            //printf("par = %d func = %s\n",contaPar,atual_func);
             int end = buscaFunc(atual_func);
             empilha(end, 'p');
 
@@ -247,19 +252,25 @@ comando
 retorno
     :T_RETORNE expressao
     {
-        mostrapilha();
+        //mostrapilha();
         int tipo = desempilha('t');
         //int teste = desempilha('r');
         //int x  = desempilha('n');
         //int y = desempilha('p');
-        int y = buscaFunc(atual_func);
-        printf("atomo = %s y = %d\n",atual_func,y);
+        //printf("atomo = %s\n",atomo);
+        //int y = buscaFunc(chama_func);
+        //printf("atomo = %s y = %d\n",atual_func,y);
+
+        int end = buscaPilha('p');
+        //printf("end = %d\n",end);
 
         //ARZL y (valor de retorno)         --> y =  endereço de retorno --> endereço do nome da função na tabela (ex -5)
         //DMEM x (se tiver variavel local)  --> x = quantidade de variáveis locais
         //RTSP n                            --> n = quantidade de parametro
-        fprintf(yyout,"\tARZL\t%d\n",y); 
-        fprintf(yyout,"\tDMEM\t%d\n", contaVar); 
+        fprintf(yyout,"\tARZL\t%d\n",end);
+        if(contaVar !=0){
+            fprintf(yyout,"\tDMEM\t%d\n", contaVar); 
+        } 
         fprintf(yyout,"\tRTSP\t%d\n",contaPar);
     }
 
@@ -404,6 +415,7 @@ expressao
 identificador
     : T_IDENTIF
         { 
+            strcpy(chama_func, atomo);
             int pos = buscaSimbolo(atomo);
             empilha(pos,'p');
         }
@@ -426,7 +438,6 @@ chamada
                 empilha(tabSimb[pos].tip,'t');
             }
         }
-    //colocar gerar código de variavel
     | T_ABRE 
         /*Gerar AMEM */
         {
@@ -441,10 +452,15 @@ chamada
         /*Gerar SVCP e DSVS */
         //empilha(posFunc, 'p');
         //int pos = desempilha('p');
-        //mostrapilha();
         fprintf(yyout,"\tSVCP\n"); 
         fprintf(yyout,"\tDSVS\tL%d\n",tabSimb[posFunc].rot); 
-
+        int y = qntParChamada();
+        //printf("par = %d\n", y);
+        int x = desempilha('t');
+        /*Chama a função para verificar se houve algum ERRO*/
+        comparaSeERRO(chama_func, y, x);
+        empilha(x,'t');
+        //mostrapilha();
       }
 
     ;
@@ -453,7 +469,9 @@ lista_argumentos
     :/* vazio */
     | expressao  
     {
-        int tipo = desempilha('t');
+        //int tipo = desempilha('t');
+        //numChamadaPar++;
+
 
     }
     lista_argumentos

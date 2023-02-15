@@ -1,7 +1,6 @@
 programa teste10
     inteiro a b
-func inteiro maior (inteiro a inteiro b inteiro c)
-inteiro d h k
+func inteiro maior (inteiro a inteiro b)
 inicio
     se a > b 
         entao retorne a 
@@ -9,5 +8,5 @@ inicio
     fimse
 fimfunc
 inicio 
-    escreva maior (10 20)
+    escreva maior (10 20 30)
 fimprograma

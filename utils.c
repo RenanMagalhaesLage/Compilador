@@ -77,6 +77,10 @@ void mostraTabela(){
         }
     }
     printf("\n");
+    for(int i = 0; i < 60; i++){
+        printf("-");
+    }
+    printf("\n");
 }
 
 //Sugestão: Desenvolver uma rotina para ajustar o endereço dos parametros na tabela de símbolos e o vetor de 
@@ -111,13 +115,17 @@ void coloca_parametro(int qnt_Par,int tipo, char nome_func[100]){
     }
 }
 
-int buscaFunc(char nome_func[100]){
+int buscaFunc(char *nome_func){
     for(int i=0; i < posTab; i++){
-        if(tabSimb[i].cat == 'f' && !strcmp(tabSimb[i].id, nome_func)){
-            return tabSimb[i].end;
+        if(tabSimb[i].cat == 'f' && (!strcmp(tabSimb[i].id, nome_func))){
+            //printf("end = %d func = %s\n",tabSimb[i].end,tabSimb[i].id );
+            return (tabSimb[i].end);
         }
     }
 }
+
+
+
 
 
 
@@ -154,7 +162,7 @@ void empilha (int valor, char tipo){
 
 int desempilha(char tipo){
     if(topo == -1)
-        yyerror("PIlha semântica vazia!!");
+        yyerror("Pilha semântica vazia!!");
     if(pilha[topo].tipo != tipo){
         char msg[100];
         sprintf(msg, "Desempilha esperado [%c], encontrado [%c]", tipo, pilha[topo].tipo);
@@ -173,6 +181,85 @@ void testaTipo(int tipo1, int tipo2, int ret){
     empilha(ret,'t');
 }
 
+/*Conta a quantidade de parametros da chamada da função*/
+int qntParChamada(){
+    int numChamadaPar=0;
+    int pos = topo;
+    while(pilha[pos].tipo == 't'){
+        numChamadaPar++;
+        pos--;
+    }    
+    return (numChamadaPar-1);
+
+}
+
+/*Função para Retornar Erro das funções*/
+int comparaSeERRO(char *nome_func,int qntPar, int tipo){
+    char msg[100];
+    for(int i=0; i < posTab; i++){
+        if(tabSimb[i].cat == 'f' && !strcmp(tabSimb[i].id, nome_func)){
+            int tamanho = tabSimb[i].qntPar;
+            /*ERRO - Incompatibilidade de tipo de parametro*/
+            for(int j = 0; j < tamanho; j++)
+            {   
+                int x = desempilha('t');
+                if(tabSimb[i].par[tamanho-1] != x)
+                {
+                    sprintf(msg, "Incompatibilidade de tipo! Esperava [%s], recebeu [%s]", tabSimb[i].par[tamanho-1] == INT? "INT" : "LOG", x == INT? "INT" : "LOG" );
+                    yyerror(msg);
+                }
+            }
+            
+            /*ERRO - Incompatibilidade de quantidade de parametros*/
+            if(tabSimb[i].qntPar != qntPar)
+            {
+                sprintf(msg, "Incompatibilidade na quantidade de parametros! Esperava [%d], recebeu [%d]", tabSimb[i].qntPar, qntPar);
+                yyerror(msg);
+            }
+            /*ERRO - Incompatibilidade de tipo de função*/
+            if(tabSimb[i].tip != tipo)
+            {
+                sprintf(msg, "Incompatibilidade de tipo da função! Esperava [%s], recebeu [%s]", tabSimb[i].tip == INT? "INT" : "LOG", tipo == INT? "INT" : "LOG");
+                yyerror(msg);
+            }
+
+        }
+    }
+}
+
+int buscaPilha(char busca){
+    int pos = topo;
+    while(pilha[pos].tipo != busca){
+        pos--;
+    }
+    return pilha[pos].valor;
+}
+
+void ajusta_parametros2(char *nome_func){
+    int numPar = desempilha('n');
+    empilha(numPar,'n');
+    mostrapilha();
+    int param = numPar;
+    int i = 0;
+    while(i < posTab){
+        if (!strcmp(tabSimb[i].id, nome_func))
+        {
+            if(tabSimb[i].cat == 'f'){
+                tabSimb[i].qntPar = numPar;
+                tabSimb[i].end = (-3) - (param);
+                param--;
+            }
+            while(param >= 0)
+            {
+                i++;
+                tabSimb[i].end = (-3) - (param);
+                param--;
+            }
+        }
+        i++;
+    }
+    
+}
 
 
 /*
