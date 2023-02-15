@@ -1,20 +1,13 @@
 programa teste13
-    inteiro a b
-func inteiro maior (inteiro a inteiro b)
+inteiro x
+func inteiro fatorial ( inteiro a )
 inicio
-    se a > b 
-        entao retorne a 
-        senao retorne b 
+    se a > 0
+        entao retorne a * fatorial ( a - 1 )
+        senao retorne 1
     fimse
 fimfunc
-func inteiro menor (inteiro c inteiro d)
 inicio
-    se a < b 
-        entao retorne a 
-        senao retorne b 
-    fimse
-fimfunc
-inicio 
-    escreva maior (10 20)
-    escreva menor (2 5)
+    leia x
+    escreva fatorial ( x )
 fimprograma

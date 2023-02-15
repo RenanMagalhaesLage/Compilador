@@ -1,10 +1,16 @@
 programa teste11
-inteiro x
-func inteiro quadrado ( inteiro a )
+inteiro x y
+func inteiro maior ( inteiro a inteiro b )
+    logico c
 inicio
-    retorne a * a
+    c <- a > b
+    se c
+        entao retorne a
+        senao retorne b
+    fimse
 fimfunc
 inicio
     leia x
-    escreva quadrado ( quadrado ( x ) )
+    leia y
+    escreva maior ( x y )
 fimprograma

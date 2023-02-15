@@ -203,7 +203,6 @@ funcao
         //printf("contarVar = %d", contaVar);
         if(contaVar)
             fprintf(yyout,"\tAMEM\t%d\n", contaVar);
-        contaVar = 0;
       }
       T_INICIO lista_comandos T_FIMFUNC
       // similar a declaração em variaveis já feita :
@@ -215,6 +214,7 @@ funcao
         mostraTabela();
         remover_tabela();
         escopo = 'g';
+        contaVar = 0;
       }
     ;
 

@@ -1579,17 +1579,17 @@ yyreduce:
         //printf("contarVar = %d", contaVar);
         if(contaVar)
             fprintf(yyout,"\tAMEM\t%d\n", contaVar);
-        contaVar = 0;
       }
-#line 1585 "sintatico.c"
+#line 1584 "sintatico.c"
     break;
 
   case 23:
-#line 214 "sintatico.y"
+#line 213 "sintatico.y"
       {
         mostraTabela();
         remover_tabela();
         escopo = 'g';
+        contaVar = 0;
       }
 #line 1595 "sintatico.c"
     break;
