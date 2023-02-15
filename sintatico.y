@@ -96,7 +96,7 @@ programa
             if(conta)
                 fprintf(yyout,"\tDMEM\t%d\n", conta);
             fprintf(yyout, "\tFIMP\n"); 
-            mostrapilha();
+            //mostrapilha();
         }
     ;
 
@@ -255,7 +255,8 @@ comando
 retorno
     :T_RETORNE expressao
     {
-        int tipo = desempilha('t');
+        verifica_topo();
+        //int tipo = desempilha('t');
         //int teste = desempilha('r');
         //int x  = desempilha('n');
         //int y = desempilha('p');
@@ -337,6 +338,7 @@ selecao
         }
       lista_comandos T_SENAO
         { 
+            //desempilha('t');
             int rot = desempilha('r');
             fprintf(yyout,"\tDSVS\tL%d\n", ++rotulo); 
             fprintf(yyout, "L%d\tNADA\n", rot);

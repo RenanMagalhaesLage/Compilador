@@ -239,7 +239,6 @@ int buscaPilha(char busca){
 void ajusta_parametros2(char *nome_func){
     int numPar = desempilha('n');
     empilha(numPar,'n');
-    mostrapilha();
     int param = numPar;
     int i = 0;
     while(i < posTab){
@@ -280,6 +279,13 @@ void remover_tabela(){
 
 int finalPilha(){
     return pilha[0].valor;
+}
+
+void verifica_topo(){
+    if(pilha[topo].tipo == 't'){
+        desempilha('t');
+        verifica_topo();
+    }
 }
 
 /*

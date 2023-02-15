@@ -1,5 +1,4 @@
 programa teste10
-    inteiro a b
 func inteiro maior (inteiro a inteiro b)
 inicio
     se a > b 
