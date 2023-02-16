@@ -1,4 +1,13 @@
 %{
+/*−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
+ *           UNIFAL − Universidade Federal de Alfenas.
+ *             BACHARELADO EM CIENCIA DA COMPUTACAO.
+ * Trabalho..: Funcao com retorno
+ * Disciplina: Teoria de Li nguagens e Compiladores
+ * Professor.: Luiz Eduardo da Silva
+ * Aluno.....: Renan Magalhães Lage
+ * Data......: 16/02/2023
+ *−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
