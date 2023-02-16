@@ -11,10 +11,10 @@ programa teste7
        fimse
        retorne c + d
    fimfunc
-   func logico g ()
-   inicio
-      retorne V
-   fimfunc
+func logico g ()
+inicio
+   retorne V
+fimfunc
 inicio
    escreva f(5 F)
    escreva g()

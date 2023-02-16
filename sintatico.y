@@ -83,8 +83,6 @@ programa
 
             /* Mostra a Tabela FINAL SEM as variáveis Locais */
             mostraTabela();
-            //int rot = desempilha();
-            //fprintf(yyout,"L%d\tNADA\n", rot); 
 
         }
       T_INICIO 
@@ -92,11 +90,9 @@ programa
       T_FIM
         { 
             int conta = finalPilha();
-            //int conta = desempilha('n');
             if(conta)
                 fprintf(yyout,"\tDMEM\t%d\n", conta);
             fprintf(yyout, "\tFIMP\n"); 
-            //mostrapilha();
         }
     ;
 
@@ -182,34 +178,19 @@ funcao
       }
     
       T_ABRE lista_parametros T_FECHA 
-        //chamar uma rotina para ajustar os parametros no vetor (negativo, contar o número de parametros)
         {
-            //Tem que empilhar:
-            //num de var locais
-            //endereço de retorno
-            //numero de parametro
             empilha(contaPar, 'n');
-            //ajusta_parametros(contaPar);
-            ajusta_parametros2(atual_func);
-            //printf("par = %d func = %s\n",contaPar,atual_func);
+            ajusta_parametros(atual_func);
             int end = buscaFunc(atual_func);
             empilha(end, 'p');
 
         }
-        //passou pelo fecha colocar os endereços (-5, -4, -3)
       variaveis 
       {
-        empilha(contaVar,'n');
-        //printf("contarVar = %d", contaVar);
         if(contaVar)
             fprintf(yyout,"\tAMEM\t%d\n", contaVar);
       }
       T_INICIO lista_comandos T_FIMFUNC
-      // similar a declaração em variaveis já feita :
-      /*    empilha(contaVar);
-            if(contaVar)
-                fprintf(yyout,"\tAMEM\t%d\n", contaVar);*/
-      //remover variaveis locais e parametros
       {
         /* Mostra a Tabela COM as variáveis Locais */
         mostraTabela();
@@ -230,9 +211,7 @@ parametro
         strcpy(elemTab.id, atomo);
         elemTab.tip = tipo;
         elemTab.cat = 'p';
-        //AQUI ESTÁ COM PROBLEMA
         elemTab.esc = escopo;
-        //printf("esc = %c",escopo);
         contaPar++;
         insereSimbolo(elemTab);
         /* Chamada de função para coloca o parametro dentro do vetor de parametros da função */
@@ -265,21 +244,21 @@ retorno
     }
     expressao
     {
-        
-        // comparar se o tipo da função é compatível (retorno é compativel com a declaração??)
-
+        /*Comparar se o tipo da função é compatível com o retorno */
+        int t = desempilha('t');
+        posFunc = buscaPilha('p');
+        for(int i = 0; i < posTab; i++){
+            if(tabSimb[i].end == posFunc){
+                if(t != tabSimb[i].tip){
+                    char msg[100];
+                    sprintf(msg, "Incompatibilidade de tipo do retorno! Esperava [%d], recebeu [%d]\n ", tabSimb[posFunc].tip, t);
+                    yyerror(msg);
+                }
+            }
+        }
         verifica_topo();
-        //int tipo = desempilha('t');
-        //int teste = desempilha('r');
-        //int x  = desempilha('n');
-        //int y = desempilha('p');
-        //printf("atomo = %s\n",atomo);
-        //int y = buscaFunc(chama_func);
-        //printf("atomo = %s y = %d\n",atual_func,y);
 
         int end = buscaPilha('p');
-        //printf("end = %d\n",end);
-
         //ARZL y (valor de retorno)         --> y =  endereço de retorno --> endereço do nome da função na tabela (ex -5)
         //DMEM x (se tiver variavel local)  --> x = quantidade de variáveis locais
         //RTSP n                            --> n = quantidade de parametro
@@ -300,7 +279,12 @@ leitura
     :T_LEIA T_IDENTIF
         {
             int pos = buscaSimbolo(atomo);
-            fprintf(yyout,"\tLEIA\n\tARZG\t%d\n", tabSimb[pos].end); 
+            if(escopo == 'g'){
+                fprintf(yyout,"\tLEIA\n\tARZG\t%d\n", tabSimb[pos].end); 
+            }
+            else{
+                fprintf(yyout,"\tLEIA\n\tARZL\t%d\n", tabSimb[pos].end); 
+            }
         }
     ;
 
@@ -373,7 +357,12 @@ atribuicao
             int pos = desempilha('p');
             if(tabSimb[pos].tip != tip)
                 yyerror("Incompatibilidade de tipo!");
-            fprintf(yyout,"\tARZG\t%d\n", tabSimb[pos].end); 
+            if(escopo == 'g'){
+                fprintf(yyout,"\tARZG\t%d\n", tabSimb[pos].end); 
+            }
+            else{
+                fprintf(yyout,"\tARZL\t%d\n", tabSimb[pos].end); 
+            }
         }
     ;
 
@@ -455,26 +444,19 @@ chamada
     | T_ABRE 
         /*Gerar AMEM */
         {
-            int pos = desempilha('p');
-            posFunc = pos;
-            empilha(tabSimb[pos].tip, 't');
             fprintf(yyout,"\tAMEM\t1\n");
+
         }
       lista_argumentos 
       T_FECHA
       {
         /*Gerar SVCP e DSVS */
-        //empilha(posFunc, 'p');
-        //int pos = desempilha('p');
+        posFunc = buscaPilha('p');
+        int temp = tratarArgumentos();
+        empilha(temp, 't');
         fprintf(yyout,"\tSVCP\n"); 
-        fprintf(yyout,"\tDSVS\tL%d\n",tabSimb[posFunc].rot); 
-        int y = qntParChamada();
-        //printf("par = %d\n", y);
-        //mostrapilha();
-        //int x = desempilha('t');
-        /*Chama a função para verificar se houve algum ERRO*/
-        comparaSeERRO(chama_func, y);
-        //empilha(x,'t');
+        fprintf(yyout,"\tDSVS\tL%d\n",tabSimb[posFunc].rot);
+
       }
 
     ;
