@@ -1,4 +1,13 @@
 %{
+/*−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
+ *           UNIFAL − Universidade Federal de Alfenas.
+ *             BACHARELADO EM CIENCIA DA COMPUTACAO.
+ * Trabalho..: Funcao com retorno
+ * Disciplina: Teoria de Linguagens e Compiladores
+ * Professor.: Luiz Eduardo da Silva
+ * Aluno.....: Renan Magalhães Lage
+ * Data......: 16/02/2023
+ *−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−*/
 #include "sintatico.h"
 char atomo[100];
 int nlin = 1;
