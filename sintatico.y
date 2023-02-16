@@ -254,8 +254,20 @@ comando
     ;
 
 retorno
-    :T_RETORNE expressao
+    :T_RETORNE 
     {
+        /* ERRO caso tiver retorno fora de uma função*/
+        if(escopo == 'g'){
+            char msg[100];
+            sprintf(msg, "Retorno fora de função!");
+            yyerror(msg);
+        }
+    }
+    expressao
+    {
+        
+        // comparar se o tipo da função é compatível (retorno é compativel com a declaração??)
+
         verifica_topo();
         //int tipo = desempilha('t');
         //int teste = desempilha('r');
@@ -277,9 +289,6 @@ retorno
         } 
         fprintf(yyout,"\tRTSP\t%d\n",contaPar);
     }
-
-        //deve gerar (depois da tradução da expressão)
-        // comparar se o tipo da função é compatível (retorno é compativel com a declaração??)
     ;
 
 entrada_saida
@@ -461,10 +470,11 @@ chamada
         fprintf(yyout,"\tDSVS\tL%d\n",tabSimb[posFunc].rot); 
         int y = qntParChamada();
         //printf("par = %d\n", y);
-        int x = desempilha('t');
+        //mostrapilha();
+        //int x = desempilha('t');
         /*Chama a função para verificar se houve algum ERRO*/
-        comparaSeERRO(chama_func, y, x);
-        empilha(x,'t');
+        comparaSeERRO(chama_func, y);
+        //empilha(x,'t');
       }
 
     ;

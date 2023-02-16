@@ -117,6 +117,7 @@ void coloca_parametro(int qnt_Par,int tipo, char nome_func[100]){
     }
 }
 
+/* Função que retorna o endereço de uma determinada função */
 int buscaFunc(char *nome_func){
     for(int i=0; i < posTab; i++){
         if(tabSimb[i].cat == 'f' && (!strcmp(tabSimb[i].id, nome_func))){
@@ -189,24 +190,26 @@ int qntParChamada(){
     while(pilha[pos].tipo == 't'){
         numChamadaPar++;
         pos--;
-    }    
+    }
+    /* O resultado diminui um pois também é contado o tipo da função*/    
     return (numChamadaPar-1);
 
 }
 
 /*Função para Retornar Erro das funções*/
-int comparaSeERRO(char *nome_func,int qntPar, int tipo){
+int comparaSeERRO(char *nome_func,int qntPar){
     char msg[100];
     for(int i=0; i < posTab; i++){
         if(tabSimb[i].cat == 'f' && !strcmp(tabSimb[i].id, nome_func)){
             int tamanho = tabSimb[i].qntPar;
             /*ERRO - Incompatibilidade de tipo de parametro*/
-            for(int j = 0; j < tamanho; j++)
+            for(int j = (tamanho-1); j >= 0; j--)
             {   
+                
                 int x = desempilha('t');
-                if(tabSimb[i].par[tamanho-1] != x)
+                if(tabSimb[i].par[j] != x)
                 {
-                    sprintf(msg, "Incompatibilidade de tipo! Esperava [%s], recebeu [%s]", tabSimb[i].par[tamanho-1] == INT? "INT" : "LOG", x == INT? "INT" : "LOG" );
+                    sprintf(msg, "Incompatibilidade de tipo! Esperava [%s], recebeu [%s]", tabSimb[i].par[j] == INT? "INT" : "LOG", x == INT? "INT" : "LOG" );
                     yyerror(msg);
                 }
             }
@@ -218,16 +221,21 @@ int comparaSeERRO(char *nome_func,int qntPar, int tipo){
                 yyerror(msg);
             }
             /*ERRO - Incompatibilidade de tipo de função*/
+            //mostrapilha();
+            int tipo = desempilha('t');
             if(tabSimb[i].tip != tipo)
             {
                 sprintf(msg, "Incompatibilidade de tipo da função! Esperava [%s], recebeu [%s]", tabSimb[i].tip == INT? "INT" : "LOG", tipo == INT? "INT" : "LOG");
                 yyerror(msg);
             }
+            empilha(tipo,'t');
 
         }
     }
 }
 
+/*Função para buscar um determinado elemento na pilha de execução*/
+/* Usada para buscar a posição na hora do retorno*/
 int buscaPilha(char busca){
     int pos = topo;
     while(pilha[pos].tipo != busca){
