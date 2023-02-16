@@ -29,3 +29,20 @@ múltiplos pontos de saída da função.
 
 ## Roteiro
 1. Defina regras para permitir a declaração de funções, conforme o seguinte exemplo:
+```bash
+func inteiro MAIOR ( inteiro A inteiro B)
+inicio
+    se A > B
+        entao retorne A
+        senao retorne B
+    fimse
+fimfunc
+```
+
+2. Defina a palavra-reservada retorne, no léxico, e um comando retorne expressao, no sintático,
+que só pode ser usado no contexto da função (em C isso não é necessário, pois o corpo
+principal do código está numa função denominada main).
+3. Considere que a função só admite parâmetros passados por valor.
+4. O compilador deve verificar compatibilidade no tipo da função, no número e tipo dos
+parâmetros na chamada da função.
+5. O compilador deve ser capaz de produzir as traduções conforme os exemplos fornecidos.
