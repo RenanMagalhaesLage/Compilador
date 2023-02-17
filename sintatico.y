@@ -14,9 +14,9 @@
 
 #include "lexico.c"
 #include "utils.c"
-int contaVar=0;    // conta o número de variáveis
+int contaVar=0;         // Conta o número de variáveis
 int contaPar;
-int rotulo = 0; // marcar lugares no código 
+int rotulo = 0;         // Marca lugares no código 
 int tipo;
 char escopo;
 char atual_func[100];   //Guarda nome da ultima função declarada
@@ -223,7 +223,7 @@ parametro
         elemTab.esc = escopo;
         contaPar++;
         insereSimbolo(elemTab);
-        /* Chamada de função para coloca o parametro dentro do vetor de parametros da função */
+        /* Chamada de função para colocar os parametros dentro do vetor de parametros da função */
         coloca_parametro(contaPar,tipo, atual_func);  
       }
     ;
@@ -439,7 +439,6 @@ chamada
     /* Testar se é global ou local*/
         {
             int pos = desempilha('p');
-            //int pos = buscaSimbolo(atomo);
             if(tabSimb[pos].esc == 'g'){
                 /* É uma variável Global */
                 fprintf(yyout,"\tCRVG\t%d\n", tabSimb[pos].end); 
@@ -473,23 +472,11 @@ chamada
 lista_argumentos
     :/* vazio */
     | expressao  
-    {
-        //int tipo = desempilha('t');
-        //numChamadaPar++;
-
-
-    }
     lista_argumentos
     ;
     
 termo
     : identificador chamada 
-    /*: T_IDENTIF
-        { 
-            int pos = buscaSimbolo(atomo);
-            fprintf(yyout,"\tCRVG\t%d\n", tabSimb[pos].end); 
-            empilha(tabSimb[pos].tip);
-        }*/
     | T_NUMERO
         { 
             fprintf(yyout,"\tCRCT\t%s\n", atomo); 
