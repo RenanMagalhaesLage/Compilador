@@ -46,3 +46,16 @@ principal do código está numa função denominada main).
 4. O compilador deve verificar compatibilidade no tipo da função, no número e tipo dos
 parâmetros na chamada da função.
 5. O compilador deve ser capaz de produzir as traduções conforme os exemplos fornecidos.
+
+## Execução
+```bash
+make
+```
+
+```bash
+./simples nome
+```
+
+```bash
+./mvs nome
+```
