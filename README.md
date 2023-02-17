@@ -1,7 +1,7 @@
 #### Universidade Federal de Alfenas - UNIFAL-MG
 Bacharelado em Ciência da Computação
 
-Prof. Luiz Eduardo da Silva
+Prof. [Luiz Eduardo da Silva](https://github.com/luizedsilva)
 
 <hr>
 <div align="center">
