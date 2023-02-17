@@ -9,9 +9,9 @@ inicio
 fimfunc
 func inteiro menor (inteiro c inteiro d)
 inicio
-    se a < b 
-        entao retorne a 
-        senao retorne b 
+    se c < d 
+        entao retorne c 
+        senao retorne d 
     fimse
 fimfunc
 inicio 
