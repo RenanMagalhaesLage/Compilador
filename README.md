@@ -59,3 +59,12 @@ make
 ```bash
 ./mvs nome
 ```
+
+Para gerar o executável simples no terminal Ubuntu:
+
+```bash
+flex -o lexico.c lexico.l
+bison -v -d sintatico.y -o sintatico.c
+gcc sintatico.c -o simples
+```
+Ou através do arquivo makefile, com o comando make.
